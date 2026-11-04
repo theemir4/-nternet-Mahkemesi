@@ -2,760 +2,132 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İnternet Mahkemesi - Dijital Adalet Platformu</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>İnternet Mahkemesi</title>
     <style>
-        :root {
-            --primary: #c9a227;
-            --primary-hover: #e0b833;
-            --bg-dark: #0f111a;
-            --bg-card: #181b29;
-            --bg-card-hover: #222638;
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
-            --guilty: #ef4444;
-            --innocent: #10b981;
-            --border: #2d3348;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        header {
-            background-color: rgba(24, 27, 41, 0.9);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            backdrop-filter: blur(10px);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--primary);
-            letter-spacing: 0.5px;
-        }
-
-        .logo-icon {
-            font-size: 1.8rem;
-        }
-
-        .stats-bar {
-            display: flex;
-            gap: 20px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 6px 16px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            font-size: 0.85rem;
-        }
-
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .stat-value {
-            font-weight: bold;
-            color: var(--primary);
-        }
-
-        main {
-            flex: 1;
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-            display: grid;
-            grid-template-columns: 1fr 340px;
-            gap: 1.5rem;
-        }
-
-        @media (max-width: 900px) {
-            main {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .courtroom {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            overflow: hidden;
-        }
-
-        .court-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .case-title-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .case-badge {
-            background: rgba(201, 162, 39, 0.15);
-            color: var(--primary);
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            border: 1px solid rgba(201, 162, 39, 0.3);
-        }
-
-        .timer-box {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: var(--guilty);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        .timer-icon {
-            animation: pulse 1s infinite alternate;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        .case-card {
-            background: rgba(0,0,0,0.25);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.25rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .case-meta {
-            display: flex;
-            justify-content: space-between;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .case-description {
-            font-size: 1.15rem;
-            line-height: 1.6;
-            color: #fff;
-            margin-bottom: 1rem;
-        }
-
-        .evidence-box {
-            background: rgba(255,255,255,0.03);
-            border-left: 3px solid var(--primary);
-            padding: 0.75rem 1rem;
-            font-style: italic;
-            font-size: 0.95rem;
-            color: #d1d5db;
-        }
-
-        .voting-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-top: auto;
-            padding-top: 1rem;
-        }
-
-        .vote-btn {
-            padding: 1.25rem;
-            border-radius: 12px;
-            border: none;
-            cursor: pointer;
-            font-weight: 800;
-            font-size: 1.1rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s ease;
-        }
-
-        .vote-btn-guilty {
-            background: rgba(239, 68, 68, 0.15);
-            border: 2px solid var(--guilty);
-            color: var(--guilty);
-        }
-
-        .vote-btn-guilty:hover {
-            background: var(--guilty);
-            color: #fff;
-            box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
-            transform: translateY(-2px);
-        }
-
-        .vote-btn-innocent {
-            background: rgba(16, 185, 129, 0.15);
-            border: 2px solid var(--innocent);
-            color: var(--innocent);
-        }
-
-        .vote-btn-innocent:hover {
-            background: var(--innocent);
-            color: #fff;
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
-            transform: translateY(-2px);
-        }
-
-        .vote-count {
-            font-size: 0.85rem;
-            font-weight: normal;
-            opacity: 0.8;
-        }
-
-        .verdict-overlay {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(15, 17, 26, 0.92);
-            backdrop-filter: blur(8px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 10;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .verdict-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .verdict-stamp {
-            font-size: 3.5rem;
-            font-weight: 900;
-            padding: 1rem 2rem;
-            border: 6px solid;
-            border-radius: 12px;
-            transform: rotate(-10deg) scale(0.8);
-            margin-bottom: 1.5rem;
-            animation: stampAnim 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            letter-spacing: 2px;
-        }
-
-        @keyframes stampAnim {
-            to { transform: rotate(-5deg) scale(1); }
-        }
-
-        .stamp-guilty {
-            color: var(--guilty);
-            border-color: var(--guilty);
-            box-shadow: 0 0 30px rgba(239, 68, 68, 0.3);
-            text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
-        }
-
-        .stamp-innocent {
-            color: var(--innocent);
-            border-color: var(--innocent);
-            box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
-            text-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
-        }
-
-        .share-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: #000;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-hover);
-        }
-
-        .btn-twitter {
-            background: #1da1f2;
-            color: #fff;
-        }
-
-        .btn-twitter:hover {
-            background: #0d8bd9;
-        }
-
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .panel {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.25rem;
-        }
-
-        .panel-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--primary);
-        }
-
-        .chat-box {
-            height: 250px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding-right: 6px;
-            margin-bottom: 0.75rem;
-        }
-
-        .chat-msg {
-            background: rgba(255,255,255,0.03);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            border-left: 2px solid var(--border);
-        }
-
-        .chat-msg .user {
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 2px;
-        }
-
-        .chat-msg .text {
-            color: #e5e7eb;
-        }
-
-        .chat-input-group {
-            display: flex;
-            gap: 6px;
-        }
-
-        .input-field {
-            flex: 1;
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 8px 12px;
-            color: #fff;
-            outline: none;
-            font-size: 0.9rem;
-        }
-
-        .input-field:focus {
-            border-color: var(--primary);
-        }
-
-        .create-case-btn {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, var(--primary), #a3801a);
-            color: #000;
-            border: none;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(201, 162, 39, 0.2);
-            transition: all 0.2s;
-        }
-
-        .create-case-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(201, 162, 39, 0.3);
-        }
-
-        .modal {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s;
-        }
-
-        .modal.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .modal-content {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 2rem;
-            width: 90%;
-            max-width: 500px;
-        }
-
-        .modal-title {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
-
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        textarea.input-field {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .modal-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.1);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 3px;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #0f111a; color: #f3f4f6; padding: 12px; display: flex; flex-direction: column; gap: 12px; max-width: 600px; margin: 0 auto; }
+        header { background: #181b29; border: 1px solid #2d3348; padding: 12px 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: bold; color: #c9a227; font-size: 1.1rem; }
+        .stats { font-size: 0.8rem; color: #9ca3af; }
+        .card { background: #181b29; border: 1px solid #2d3348; padding: 16px; border-radius: 12px; position: relative; }
+        .badge { background: rgba(201,162,39,0.2); color: #c9a227; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .title { font-size: 1.2rem; margin: 8px 0; color: #fff; }
+        .desc { font-size: 0.95rem; color: #d1d5db; line-height: 1.4; margin-bottom: 12px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; }
+        .timer { color: #ef4444; font-weight: bold; float: right; font-size: 0.9rem; }
+        .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .vote-btn { padding: 14px 8px; border-radius: 10px; border: 2px solid; font-weight: bold; font-size: 0.95rem; cursor: pointer; text-align: center; }
+        .btn-guilty { background: rgba(239, 68, 68, 0.15); border-color: #ef4444; color: #ef4444; }
+        .btn-innocent { background: rgba(16, 185, 129, 0.15); border-color: #10b981; color: #10b981; }
+        .verdict-box { display: none; background: #0f111a; border: 2px solid #c9a227; border-radius: 10px; padding: 16px; text-align: center; margin-top: 12px; }
+        .verdict-title { font-size: 1.8rem; font-weight: 900; margin-bottom: 6px; }
+        .action-btn { width: 100%; padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; margin-top: 8px; font-size: 0.9rem; }
+        .btn-twitter { background: #1da1f2; color: white; }
+        .btn-next { background: #c9a227; color: black; }
+        .btn-create { background: linear-gradient(135deg, #c9a227, #a3801a); color: black; font-weight: bold; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); padding: 20px; z-index: 1000; align-items: center; justify-content: center; }
+        .modal-body { background: #181b29; border: 1px solid #2d3348; padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; }
+        input, textarea { width: 100%; padding: 10px; margin: 8px 0 12px; background: rgba(0,0,0,0.3); border: 1px solid #2d3348; border-radius: 6px; color: white; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">
-            <span class="logo-icon">⚖️</span>
-            <span>İnternet Mahkemesi</span>
-        </div>
-        <div class="stats-bar">
-            <div class="stat-item">
-                <span>Canlı Jüri:</span>
-                <span class="stat-value" id="active-jurors">142</span>
-            </div>
-            <div class="stat-item">
-                <span>Tamamlanan Dava:</span>
-                <span class="stat-value" id="completed-cases">1,892</span>
-            </div>
-        </div>
+        <div class="logo">⚖️ İnternet Mahkemesi</div>
+        <div class="stats">Canlı Jüri: <strong style="color:#c9a227;">142</strong></div>
     </header>
 
-    <main>
-        <section class="courtroom">
-            <div class="court-header">
-                <div class="case-title-area">
-                    <span class="case-badge">DAVA #4092</span>
-                    <h2 id="case-subject">Süzülmeyen Makarna Faciası</h2>
-                </div>
-                <div class="timer-box">
-                    <span class="timer-icon">⏱️</span>
-                    <span id="timer">00:42</span>
-                </div>
-            </div>
+    <div class="card">
+        <span class="badge">DAVA #4092</span>
+        <span class="timer" id="timer">⏱️ 00:45</span>
+        <h2 class="title" id="case-title">Süzülmeyen Makarna Faciası</h2>
+        <div class="desc" id="case-desc">"Ev arkadaşım dün gece makarna pişirdi ama suyunu süzmeden direkt sosu tencereye boşalttı. Lapa olması lezzet katar diyor. Bu bir mutfak suçudur!"</div>
 
-            <div class="case-card">
-                <div class="case-meta">
-                    <span>Davacı: <strong>@AhmetT</strong></span>
-                    <span>Sanık: <strong>@Oğuzhan_K</strong></span>
-                </div>
-                <div class="case-description" id="case-text">
-                    "Ev arkadaşım dün gece makarna pişirdi ama suyunu süzmeden direkt sosu tencereye boşalttı. 'Lapa olması lezzet katar' diye kendini savunuyor. Bu hareket bir mutfak suçudur, cezalandırılmasını talep ediyorum!"
-                </div>
-                <div class="evidence-box">
-                    <strong>Delil 1:</strong> Tencere içinde çorbaya dönüşmüş salçalı makarna fotoğrafı sunuldu.
-                </div>
-            </div>
+        <div class="btn-grid" id="vote-buttons">
+            <button class="vote-btn btn-guilty" onclick="vote('guilty')">SUÇLU 🔨<br><small id="g-count">%74</small></button>
+            <button class="vote-btn btn-innocent" onclick="vote('innocent')">BERAAT 🕊️<br><small id="i-count">%26</small></button>
+        </div>
 
-            <div class="voting-section">
-                <button class="vote-btn vote-btn-guilty" onclick="castVote('guilty')">
-                    <span>SUÇLU 🔨</span>
-                    <span class="vote-count" id="guilty-count">%74 (105 Oy)</span>
-                </button>
-                <button class="vote-btn vote-btn-innocent" onclick="castVote('innocent')">
-                    <span>SUÇSUZ / HAKLI 🕊️</span>
-                    <span class="vote-count" id="innocent-count">%26 (37 Oy)</span>
-                </button>
-            </div>
+        <div class="verdict-box" id="verdict-box">
+            <div class="verdict-title" id="verdict-text" style="color:#ef4444;">SUÇLU</div>
+            <p id="verdict-sub" style="font-size:0.85rem; color:#9ca3af; margin-bottom:10px;">Jürilerin %74 oyu ile karar verildi.</p>
+            <button class="action-btn btn-twitter" onclick="shareX()">🐦 X'te Paylaş</button>
+            <button class="action-btn btn-next" onclick="nextCase()">Sonraki Dava ➡️</button>
+        </div>
+    </div>
 
-            <div class="verdict-overlay" id="verdict-modal">
-                <div class="verdict-stamp stamp-guilty" id="verdict-stamp">SUÇLU</div>
-                <h3>Mahkeme Kararını Verdi!</h3>
-                <p id="verdict-summary" style="color: var(--text-muted); margin-top: 8px;">Jürilerin %74 oyu ile sanık suçlu bulunmuştur.</p>
-                
-                <div class="share-actions">
-                    <button class="btn btn-twitter" onclick="shareOnTwitter()">
-                        <span>🐦 X'te (Twitter) Paylaş</span>
-                    </button>
-                    <button class="btn btn-primary" onclick="loadNextCase()">
-                        <span>Sonraki Davaya Geç ➡️</span>
-                    </button>
-                </div>
-            </div>
-        </section>
+    <button class="action-btn btn-create" onclick="openM()">+ Sen de Dava Aç</button>
 
-        <aside class="sidebar">
-            <button class="create-case-btn" onclick="openModal()">
-                + Yeni Dava Aç
-            </button>
-
-            <div class="panel">
-                <div class="panel-title">
-                    <span>💬</span> Jüri Müzakeresi
-                </div>
-                <div class="chat-box" id="chat-box">
-                    <div class="chat-msg">
-                        <div class="user">Jüri #12</div>
-                        <div class="text">Suyunu süzmemek nedir abi çorba mı içiyorsunuz? Direk suçlu!</div>
-                    </div>
-                    <div class="chat-msg">
-                        <div class="user">Jüri #89</div>
-                        <div class="text">İtalyanlar makarnanın nişastalı suyunu sos için kullanır ama bu kadarı da fazla bence.</div>
-                    </div>
-                    <div class="chat-msg">
-                        <div class="user">Jüri #04</div>
-                        <div class="text">Öğrenci evinde her şey mübahtır, beraat veriyorum.</div>
-                    </div>
-                </div>
-                <div class="chat-input-group">
-                    <input type="text" class="input-field" id="chat-input" placeholder="Görüşünü bildir..." onkeypress="handleChatKey(event)">
-                    <button class="btn btn-primary" onclick="sendChatMessage()">Gönder</button>
-                </div>
-            </div>
-        </aside>
-    </main>
-
-    <div class="modal" id="case-modal">
-        <div class="modal-content">
-            <div class="modal-title">⚖️ Yeni Dava Dilekçesi</div>
-            <div class="form-group">
-                <label>Dava Konusu / Başlık</label>
-                <input type="text" id="input-title" class="input-field" placeholder="Örn: Kulaklıkla Yüksek Sesle Müzik Dinlemek">
-            </div>
-            <div class="form-group">
-                <label>Sanığın Suçu / Olayın Detayı</label>
-                <textarea id="input-desc" class="input-field" placeholder="Ne yaşandı? Neden jürinin karar vermesini istiyorsun?"></textarea>
-            </div>
-            <div class="modal-actions">
-                <button class="btn" style="background: transparent; color: var(--text-muted);" onclick="closeModal()">İptal</button>
-                <button class="btn btn-primary" onclick="submitCase()">Davayı Aç</button>
-            </div>
+    <div class="modal" id="modal">
+        <div class="modal-body">
+            <h3 style="color:#c9a227;">⚖️ Dava Aç</h3>
+            <input type="text" id="m-title" placeholder="Dava Konusu (Örn: Geç Cevap Vermek)">
+            <textarea id="m-desc" placeholder="Ne yaşandı? Detayları yaz..."></textarea>
+            <button class="action-btn btn-next" onclick="saveM()">Davayı Başlat</button>
+            <button class="action-btn" style="background:transparent; color:#9ca3af;" onclick="closeM()">İptal</button>
         </div>
     </div>
 
     <script>
-        let timeLeft = 42;
-        let timerId = null;
-        let guiltyVotes = 105;
-        let innocentVotes = 37;
-        let hasVoted = false;
+        let g = 105, i = 37, voted = false, t = 45, interval;
 
-        const sampleCases = [
-            {
-                id: "4093",
-                subject: "Grup Terk Eden Arkadaş",
-                text: "Arkadaşımız halı saha maçına 10 dakika kala 'evde işim çıktı' diyerek gelmedi. Yedeğimiz yoktu ve 5 kişi oynamak zorunda kaldık.",
-                guilty: 180,
-                innocent: 12
-            },
-            {
-                id: "4094",
-                subject: "Dizi Spoilerı Vermek",
-                text: "İzlemediğimi bildiği halde dizinin son bölümündeki en büyük sürprizi kahve içerken pat diye söyledi.",
-                guilty: 310,
-                innocent: 5
-            }
-        ];
-
-        function startTimer() {
-            clearInterval(timerId);
-            timerId = setInterval(() => {
-                if(timeLeft > 0) {
-                    timeLeft--;
-                    let sec = timeLeft < 10 ? "0" + timeLeft : timeLeft;
-                    document.getElementById('timer').innerText = `00:${sec}`;
-                } else {
-                    clearInterval(timerId);
-                    showVerdict();
-                }
+        function startT() {
+            clearInterval(interval);
+            interval = setInterval(() => {
+                if(t > 0) { t--; document.getElementById('timer').innerText = `⏱️ 00:${t < 10 ? '0'+t : t}`; }
+                else { clearInterval(interval); showV(); }
             }, 1000);
         }
 
-        function castVote(type) {
-            if(hasVoted) return;
-            hasVoted = true;
-
-            if(type === 'guilty') guiltyVotes++;
-            else innocentVotes++;
-
-            updateVoteUI();
-            showVerdict();
+        function vote(type) {
+            if(voted) return;
+            voted = true;
+            if(type === 'guilty') g++; else i++;
+            showV();
         }
 
-        function updateVoteUI() {
-            let total = guiltyVotes + innocentVotes;
-            let gPercent = Math.round((guiltyVotes / total) * 100);
-            let iPercent = 100 - gPercent;
-
-            document.getElementById('guilty-count').innerText = `%${gPercent} (${guiltyVotes} Oy)`;
-            document.getElementById('innocent-count').innerText = `%${iPercent} (${innocentVotes} Oy)`;
-        }
-
-        function showVerdict() {
-            let overlay = document.getElementById('verdict-modal');
-            let stamp = document.getElementById('verdict-stamp');
-            let summary = document.getElementById('verdict-summary');
-
-            let isGuilty = guiltyVotes > innocentVotes;
-            let total = guiltyVotes + innocentVotes;
-            let percent = Math.round(((isGuilty ? guiltyVotes : innocentVotes) / total) * 100);
-
-            if(isGuilty) {
-                stamp.className = "verdict-stamp stamp-guilty";
-                stamp.innerText = "SUÇLU";
-                summary.innerText = `Jürilerin %${percent} oyu ile sanık SUÇLU bulunmuştur!`;
-            } else {
-                stamp.className = "verdict-stamp stamp-innocent";
-                stamp.innerText = "BERAAT";
-                summary.innerText = `Jürilerin %${percent} oyu ile sanık HAKLI bulunmuştur!`;
-            }
-
-            overlay.classList.add('active');
-        }
-
-        function shareOnTwitter() {
-            let subject = document.getElementById('case-subject').innerText;
-            let stamp = document.getElementById('verdict-stamp').innerText;
-            let text = encodeURIComponent(`İnternet Mahkemesi Kararını Verdi! ⚖️\n\n"${subject}" davasında sanık %${Math.round((guiltyVotes/(guiltyVotes+innocentVotes))*100)} oy ile ${stamp} bulundu!\n\nSen de jüri ol:`);
-            window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
-        }
-
-        function loadNextCase() {
-            document.getElementById('verdict-modal').classList.remove('active');
-            let next = sampleCases[Math.floor(Math.random() * sampleCases.length)];
+        function showV() {
+            document.getElementById('vote-buttons').style.display = 'none';
+            let box = document.getElementById('verdict-box');
+            let isG = g >= i;
+            let percent = Math.round(((isG ? g : i) / (g + i)) * 100);
             
-            document.getElementById('case-subject').innerText = next.subject;
-            document.getElementById('case-text').innerText = `"${next.text}"`;
-            
-            guiltyVotes = next.guilty;
-            innocentVotes = next.innocent;
-            hasVoted = false;
-            timeLeft = 45;
-            
-            updateVoteUI();
-            startTimer();
+            document.getElementById('verdict-text').innerText = isG ? "SUÇLU 🔨" : "BERAAT 🕊️";
+            document.getElementById('verdict-text').style.color = isG ? "#ef4444" : "#10b981";
+            document.getElementById('verdict-sub').innerText = `Jürilerin %${percent} oyu ile karar verildi.`;
+            box.style.display = 'block';
         }
 
-        function sendChatMessage() {
-            let input = document.getElementById('chat-input');
-            if(!input.value.trim()) return;
-
-            let box = document.getElementById('chat-box');
-            let msg = document.createElement('div');
-            msg.className = 'chat-msg';
-            msg.innerHTML = `<div class="user">Sen (Jüri)</div><div class="text">${input.value}</div>`;
-            box.appendChild(msg);
-            box.scrollTop = box.scrollHeight;
-            input.value = '';
+        function nextCase() {
+            document.getElementById('verdict-box').style.display = 'none';
+            document.getElementById('vote-buttons').style.display = 'grid';
+            document.getElementById('case-title').innerText = "Halı Saha Maçına Gelmemek";
+            document.getElementById('case-desc').innerText = '"Maça 10 dakika kala evde işim çıktı diyerek gelmedi. 5 kişi oynamak zorunda kaldık."';
+            g = 80; i = 5; voted = false; t = 45;
+            startT();
         }
 
-        function handleChatKey(e) {
-            if(e.key === 'Enter') sendChatMessage();
+        function shareX() {
+            let title = document.getElementById('case-title').innerText;
+            let txt = encodeURIComponent(`İnternet Mahkemesi Kararını Verdi! ⚖️\n\n"${title}" davasında karar verildi!\n\nSen de jüri ol:`);
+            window.open(`https://twitter.com/intent/tweet?text=${txt}`, '_blank');
         }
 
-        function openModal() { document.getElementById('case-modal').classList.add('active'); }
-        function closeModal() { document.getElementById('case-modal').classList.remove('active'); }
-
-        function submitCase() {
-            let title = document.getElementById('input-title').value;
-            let desc = document.getElementById('input-desc').value;
-
-            if(!title || !desc) return alert("Lütfen tüm alanları doldurun!");
-
-            document.getElementById('case-subject').innerText = title;
-            document.getElementById('case-text').innerText = `"${desc}"`;
-            
-            guiltyVotes = 1;
-            innocentVotes = 0;
-            hasVoted = false;
-            timeLeft = 60;
-
-            closeModal();
-            updateVoteUI();
-            startTimer();
-
-            document.getElementById('input-title').value = '';
-            document.getElementById('input-desc').value = '';
+        function openM() { document.getElementById('modal').style.display = 'flex'; }
+        function closeM() { document.getElementById('modal').style.display = 'none'; }
+        function saveM() {
+            let title = document.getElementById('m-title').value;
+            let desc = document.getElementById('m-desc').value;
+            if(!title || !desc) return alert("Boş bırakma!");
+            document.getElementById('case-title').innerText = title;
+            document.getElementById('case-desc').innerText = `"${desc}"`;
+            document.getElementById('verdict-box').style.display = 'none';
+            document.getElementById('vote-buttons').style.display = 'grid';
+            g = 1; i = 0; voted = false; t = 60;
+            closeM(); startT();
         }
 
-        startTimer();
+        startT();
     </script>
 </body>
 </html>
